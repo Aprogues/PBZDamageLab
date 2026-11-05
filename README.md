@@ -8,7 +8,8 @@ A UE4SS Lua mod: summon a training dummy, see every hit split into the damage po
 
 ## Download
 
-Get `PBZDamageLab-x.y.z.zip` from [Releases](../../releases), or copy the `PBZDamageLab` folder from this repository.
+- **Nexus Mods**: https://www.nexusmods.com/phantombladezero/mods/548
+- **GitHub**: `PBZDamageLab-x.y.z.zip` from [Releases](../../releases), or copy the `PBZDamageLab` folder from this repository.
 
 ## Requirements
 

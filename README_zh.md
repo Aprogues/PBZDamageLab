@@ -8,7 +8,8 @@ English: [README.md](README.md)
 
 ## 下载
 
-在 [Releases](../../releases) 下载 `PBZDamageLab-x.y.z.zip`，或者直接复制本仓库里的 `PBZDamageLab` 文件夹。
+- **Nexus Mods**：https://www.nexusmods.com/phantombladezero/mods/548
+- **GitHub**：在 [Releases](../../releases) 下载 `PBZDamageLab-x.y.z.zip`，或者直接复制本仓库里的 `PBZDamageLab` 文件夹。
 
 ## 需要
 
