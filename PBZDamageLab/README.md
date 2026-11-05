@@ -41,16 +41,25 @@ Edit `config.ini` to change them (restart the game after editing). Key names fol
 - **Recent hits**: `damage = base × Mult × (1 + Add) × (1 + Amp)` with the values the attack started with.
 - **Accessories**: every accessory you wear, colored by type (attack yellow, support blue, survival red). Attack accessories show their damage pool. The tag is green while the accessory is giving its bonus and dark gray when its condition is not met. Dance Fan, Twin Fish Pendant and Talisman of Despair also show their live value.
 
-## Damage formula (measured on the dummy)
+## Damage formula
 
-`damage = base × independent multipliers × (1 + additive-multiplier pool) × (1 + amplification pool)`
+`damage = base × independent multipliers × (1 + additive pool) × (1 + amplification pool)`
 
-- **Mult (independent)**: Quick Hand Might / Pair / Pendant, Broken Vessel, weapon level bonuses. Multiply with everything.
-- **Add**: Dance Fan. Bonuses inside the pool add up.
-- **Amp**: Crimson Resolve, Twin Fish Pendant, Battle Wraps, Desperate Stand, Snow and Blood. Bonuses inside the pool add up.
-- The two pools multiply with each other (measured: 1.6 × 1.35 = 2.16).
-- An attack's damage is fixed when that attack starts. Buffs triggered in the middle of a multi-hit attack only apply from the next attack.
-- Pools marked "On-hit add" and "Dmg up" are read from game data and not yet measured against the others.
+**Measured on the dummy (exact to 0.01):**
+
+- **Mult (independent)**: QUICK HAND MIGHT ×1.18, Broken Vessel ×1.15 (Refine ×1.25), weapon level bonus ×1.1. They multiply with everything.
+- **Add**: Dance Fan (Refine: +3% per metre moved during the attack, up to +60%).
+- **Amp**: Crimson Resolve, Twin Fish Pendant, BATTLE WRAPS. Bonuses in this pool add up.
+- The two pools multiply each other (1.6 × 1.35 = 2.16).
+- An attack's damage is fixed when it starts; buffs triggered mid-attack apply from the next attack.
+
+**Read from game data, not measured yet:**
+
+- QUICK HAND PAIR / PENDANT: same kind as QUICK HAND MIGHT, so most likely independent multipliers.
+- Desperate Stand, Snow and Blood: amplification pool.
+- Talisman of Despair and similar on-hit accessories ("On-hit add") work at a separate stage; whether they add with Dance Fan is untested. "Dmg up" accessories use yet another pool, also untested.
+
+**Not covered:** only physical damage was tested (no elemental weapons yet). The dummy has no resistances, so absolute numbers against real bosses differ, though comparisons between accessories should hold.
 
 ## Known limits
 

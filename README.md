@@ -49,14 +49,25 @@ Change them in `PBZDamageLab/config.ini` (restart the game after editing). Inser
 - **Build compare**, **timed test**, **CSV export**, **combat mode**.
 - Chinese / English panel, follows the game language.
 
-## Damage formula (measured on the dummy)
+## Damage formula
 
 `damage = base × independent multipliers × (1 + additive pool) × (1 + amplification pool)`
 
-- **Mult**: QUICK HAND MIGHT / PAIR / PENDANT, Broken Vessel, weapon level bonuses
-- **Add**: Dance Fan
-- **Amp**: Crimson Resolve, Twin Fish Pendant, BATTLE WRAPS, Desperate Stand, Snow and Blood
+**Measured on the dummy (exact to 0.01):**
+
+- **Mult (independent)**: QUICK HAND MIGHT ×1.18, Broken Vessel ×1.15 (Refine ×1.25), weapon level bonus ×1.1. They multiply with everything.
+- **Add**: Dance Fan (Refine: +3% per metre moved during the attack, up to +60%).
+- **Amp**: Crimson Resolve, Twin Fish Pendant, BATTLE WRAPS. Bonuses in this pool add up.
+- The two pools multiply each other (1.6 × 1.35 = 2.16).
 - An attack's damage is fixed when it starts; buffs triggered mid-attack apply from the next attack.
+
+**Read from game data, not measured yet:**
+
+- QUICK HAND PAIR / PENDANT: same kind as QUICK HAND MIGHT, so most likely independent multipliers.
+- Desperate Stand, Snow and Blood: amplification pool.
+- Talisman of Despair and similar on-hit accessories ("On-hit add") work at a separate stage; whether they add with Dance Fan is untested. "Dmg up" accessories use yet another pool, also untested.
+
+**Not covered:** only physical damage was tested (no elemental weapons yet). The dummy has no resistances, so absolute numbers against real bosses differ, though comparisons between accessories should hold.
 
 ## Bug reports
 
