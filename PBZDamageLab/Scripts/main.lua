@@ -3,7 +3,7 @@
 -- F1/F2/F3 save A/B/C, F4 clear, Insert combat mode, Home timed test, End export). No menu takes
 -- input, the camera stays free. Text follows the game language (Chinese for zh*, English otherwise);
 -- names come from the game.
-local VERSION='1.0.0'
+local VERSION='1.0.1'
 local DIR=debug.getinfo(1,'S').source:gsub('^@',''):match('^(.*[/\\])')
 local function log(s) print('[PBZDamageLab] '..tostring(s)..'\n') end
 local DEBUG=false -- set from config.ini [Debug] Debug; per-hit lines only go to the log when it is on
@@ -30,6 +30,7 @@ I18n.override=(langCfg=='zh' or langCfg=='en') and langCfg or nil
 
 Probes.init(Accessories)
 Probes.debug=DEBUG
+Probes.WEAPONS=Weapons
 Probes.player=Dummy.player
 Probes.clock=Dummy.now
 Probes.T=T
@@ -67,6 +68,7 @@ local MODDIR=DIR:gsub('[/\\]Scripts[/\\]?$','')
 local exportedPath,exportedAt=nil,0
 local homeLoc,lastDummyHit=nil,-100 -- where the dummy was summoned / when it was last hit
 local snapCount=0 -- how often the position lock had to put the dummy back (log only)
+local comboBuff,comboCd=false,false -- last 碧血云天 buff / cooldown state (Debug trace only)
 
 local function shortClass(o)
     local ok,n=pcall(function() return o:GetClass():GetFName():ToString() end)
@@ -381,6 +383,15 @@ local hold=pin(function()
     if ok and moved then
         snapCount=snapCount+1
         if snapCount==1 or snapCount%200==0 then dlog('dummy held in place ('..snapCount..' snaps)') end
+    end
+    if DEBUG then
+        -- Log when 碧血云天's buff and cooldown start / end, to time them against the HIT lines.
+        local p=Dummy.player()
+        local okC,buff,cd=pcall(Probes.comboState,p)
+        if okC and p then
+            if buff~=comboBuff then dlog('COMBO buff '..(buff and 'ON' or 'off'));comboBuff=buff end
+            if cd~=comboCd then dlog('COMBO cooldown '..(cd and 'ON' or 'off'));comboCd=cd end
+        end
     end
     return false
 end)

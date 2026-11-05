@@ -4,7 +4,7 @@ A UE4SS Lua mod: summon a training dummy, see every hit broken down into its dam
 
 中文说明见 [README_zh.md](README_zh.md).
 
-Version 1.0.0
+Version 1.0.1
 
 ## Requirements
 
@@ -15,7 +15,7 @@ Version 1.0.0
 
 1. Install UE4SS for Phantom Blade Zero first.
 2. Copy the `PBZDamageLab` folder into `ue4ss/Mods/` (next to `mods.txt`).
-3. Add `PBZDamageLab : 1` to `ue4ss/Mods/mods.txt`, above the `Keybinds` line.
+3. No need to edit `mods.txt`: the folder includes `enabled.txt`, so UE4SS loads the mod by itself. To turn it off, delete `enabled.txt`. (If you added `PBZDamageLab : 1` to `mods.txt` for 1.0.0, it can stay.)
 4. If you use the "PBZ Damage Test" training dummy mod, set it to `: 0` so two dummies don't spawn.
 
 ## Keys
@@ -38,7 +38,7 @@ Edit `config.ini` to change them (restart the game after editing). Key names fol
 
 - **Stats**: hits, total damage, Sha-Chi damage, highest hit, damage per weapon, current combo (a new combo starts after 3 s without a hit) with DPS. Sha-Chi rows appear only in combat mode (the dummy has no Sha-Chi bar). Executions are not counted. Moves every weapon of a type shares (air attacks, perfect dodge …) are credited to the next weapon-specific move in the same combo, so they go to the right weapon even right after a switch.
 - The dummy is the game's developer hit-only dummy: it never fights back, never deflects, has no Sha-Chi bar, and stays fixed on the spot where it was summoned.
-- **Recent hits**: `damage = base × Mult × (1 + Add) × (1 + Amp)` with the values the attack started with.
+- **Recent hits**: `damage = base × Mult × (1 + Add) × (1 + Amp)` with the values at the moment each hit comes out.
 - **Accessories**: every accessory you wear, colored by type (attack yellow, support blue, survival red). Attack accessories show their damage pool. The tag is green while the accessory is giving its bonus and dark gray when its condition is not met. Dance Fan, Twin Fish Pendant and Talisman of Despair also show their live value.
 
 ## Damage formula
@@ -51,7 +51,7 @@ Edit `config.ini` to change them (restart the game after editing). Key names fol
 - **Add**: Dance Fan (Refine: +3% per metre moved during the attack, up to +60%).
 - **Amp**: Crimson Resolve, Twin Fish Pendant, BATTLE WRAPS. Bonuses in this pool add up.
 - The two pools multiply each other (1.6 × 1.35 = 2.16).
-- An attack's damage is fixed when it starts; buffs triggered mid-attack apply from the next attack.
+- Each hit uses the bonuses you have at the moment it comes out; after that it doesn't change. A buff triggered partway through a multi-hit attack already applies to the later hits of the same attack: Crimson Resolve triggers around the 3rd hit of the Pojun charge and covers its strongest phases. Dance Fan grows as you move, so later hits get more.
 
 **Read from game data, not measured yet:**
 

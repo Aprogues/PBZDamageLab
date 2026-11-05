@@ -20,7 +20,7 @@ A UE4SS Lua mod: summon a training dummy, see every hit split into the damage po
 
 1. Install UE4SS For Phantom Blade Zero first.
 2. Copy the `PBZDamageLab` folder into `ue4ss/Mods/` (next to `mods.txt`), e.g. `...\steamapps\common\PBZ\platform\steam\ue4ss\Mods\PBZDamageLab`.
-3. Add `PBZDamageLab : 1` to `ue4ss/Mods/mods.txt`, above the `Keybinds` line.
+3. No need to edit `mods.txt`: the folder includes `enabled.txt`, so UE4SS loads the mod by itself. To turn it off, delete `enabled.txt`. (If you added `PBZDamageLab : 1` to `mods.txt` for 1.0.0, it can stay.)
 4. If you use the "PBZ Damage Test" training dummy mod, set it to `: 0` so two dummies don't spawn.
 5. In game, press F7 to summon the dummy and F6 to show / hide the panel.
 
@@ -43,7 +43,7 @@ Change them in `PBZDamageLab/config.ini` (restart the game after editing). Inser
 ## Features
 
 - **Training dummy**: the game's developer hit-only dummy. Never fights back or deflects, health refills, fixed in place.
-- **Per-hit breakdown**: base × Mult × (1 + Add) × (1 + Amp), with the values each attack started with.
+- **Per-hit breakdown**: base × Mult × (1 + Add) × (1 + Amp), with the values at the moment each hit comes out.
 - **Stats**: hits, total, highest hit, damage per weapon, current combo with DPS. Executions are not counted.
 - **Accessories**: every equipped accessory with its damage pool; green while its bonus is active. Live values for Dance Fan, Twin Fish Pendant and Talisman of Despair.
 - **Build compare**, **timed test**, **CSV export**, **combat mode**.
@@ -59,7 +59,7 @@ Change them in `PBZDamageLab/config.ini` (restart the game after editing). Inser
 - **Add**: Dance Fan (Refine: +3% per metre moved during the attack, up to +60%).
 - **Amp**: Crimson Resolve, Twin Fish Pendant, BATTLE WRAPS. Bonuses in this pool add up.
 - The two pools multiply each other (1.6 × 1.35 = 2.16).
-- An attack's damage is fixed when it starts; buffs triggered mid-attack apply from the next attack.
+- Each hit uses the bonuses you have at the moment it comes out; after that it doesn't change. A buff triggered partway through a multi-hit attack already applies to the later hits of the same attack: Crimson Resolve triggers around the 3rd hit of the Pojun charge and covers its strongest phases. Dance Fan grows as you move, so later hits get more.
 
 **Read from game data, not measured yet:**
 

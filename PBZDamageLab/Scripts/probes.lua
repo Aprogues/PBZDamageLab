@@ -39,11 +39,13 @@ local RECENT=3.0 -- seconds a hit keeps a conditional accessory lit
 -- To tell apart accessories that add the same value (追杀令·改 / 影动猎杀仪·改 / 神射之眼 are all
 -- +15%), each one's ability graph is hooked: while it runs, any hit-time modifier it applies is
 -- attributed to it. If the hooks cannot be installed, matching falls back to the value.
+-- The Lv2 abilities of the first four are Lv1 subclasses with no graph of their own: the Lv1
+-- hook already runs for them, so only Lv1 is listed.
 local ATTRIBUTED={
-    BreakAttack={'GA_Accessory_BreakAttack_Lv1','GA_Accessory_BreakAttack_Lv2'},
-    ActHit={'GA_Accessory_ActHit_Lv1','GA_Accessory_ActHit_Lv2'},
-    Ranged={'GA_Accessory_Ranged_Lv1','GA_Accessory_Ranged_Lv2'},
-    Rider={'GA_Accessory_Rider_Lv1','GA_Accessory_Rider_Lv2'},
+    BreakAttack={'GA_Accessory_BreakAttack_Lv1'},
+    ActHit={'GA_Accessory_ActHit_Lv1'},
+    Ranged={'GA_Accessory_Ranged_Lv1'},
+    Rider={'GA_Accessory_Rider_Lv1'},
     UltimateBreak={'GA_Accessory_UltimateBreak_Lv1','GA_Accessory_UltimateBreak_Lv2'},
 }
 local running={}       -- stack of accessory keys whose ability graph is executing right now
@@ -160,6 +162,15 @@ local function anyEffect(asc,...)
     return false
 end
 local function ge(name) return ACC..name..'.'..name:match('[^/]+$')..'_C' end
+
+-- Debug trace for 碧血云天 (Combo): whether its damage buff and its cooldown are on right now.
+function M.comboState(p)
+    local asc=p.AbilitySystemComponent
+    local buff=try(anyEffect,asc,ge('Combo/GE_Accessory_Combo_DamageBuff_Lv1'),
+        ge('Combo/GE_Accessory_Combo_DamageBuff_Lv2'),ge('Combo/GE_Accessory_Combo_DamageBuff_Lv3'))
+    local cd=try(anyEffect,asc,ge('Combo/GE_Accessory_Combo_Cooldown'))
+    return buff==true,cd==true
+end
 
 -- Whether a worn accessory is giving its bonus right now, plus an optional live-value text:
 -- true = lit (active), false = dark (condition not met), nil = not tracked (support / survival).
@@ -323,20 +334,22 @@ function M.installHooks(log)
     local ok2,err2=pcall(RegisterHook,'/Script/SGameAttributes.DamagePreTakePayload:ApplyModifyToChildren',onPreTake)
     log(ok2 and 'pre-take hook ok' or ('pre-take hook failed: '..tostring(err2)))
     -- Pre-hook pushes the accessory key while its ability graph runs, post-hook pops it.
-    local installed,failed=0,0
+    local installed,failedNames=0,{}
     for key,classes in pairs(ATTRIBUTED) do
         for _,name in ipairs(classes) do
-            local ok=pcall(function()
+            local ok,err=pcall(function()
                 LoadAsset(ACC..name..'.'..name..'_C')
                 RegisterHook(ACC..name..'.'..name..'_C:ExecuteUbergraph_'..name,
                     function() running[#running+1]=key end,
                     function() running[#running]=nil end)
             end)
-            if ok then installed=installed+1 else failed=failed+1 end
+            if ok then installed=installed+1
+            else failedNames[#failedNames+1]=name..' ('..tostring(err):sub(1,80)..')' end
         end
     end
     attributionOn=installed>0
-    log(string.format('accessory attribution hooks: %d ok, %d failed',installed,failed))
+    log(string.format('accessory attribution hooks: %d ok, %d failed',installed,#failedNames))
+    for _,n in ipairs(failedNames) do log('  attribution hook failed: '..n) end
 end
 
 -- Called from the damage event: returns the modifiers this hit's bullet started with.
@@ -377,9 +390,19 @@ function M.consume(payload,p,now)
         elseif name:find('/Players/',1,true) and folder~='其他' then
             M.lastWeapon=folder
         end
-        r.weapon=folder
         -- Player attacks come from …/ActorData/Players/… bullet data; enemy attacks do not.
         r.fromPlayer=name:find('/Players/',1,true)~=nil
+        if folder=='其他' and M.WEAPONS then
+            -- Some weapons fire separate actors placed in the level (乱莺's sword waves are
+            -- …PersistentLevel.BP_LuanYing_SwordWave_…): the actor's class name carries the weapon.
+            local w=name:match('PersistentLevel%.BP_(%w+)_')
+            if w and M.WEAPONS[w] then
+                folder=w
+                M.lastWeapon=w
+                r.fromPlayer=true
+            end
+        end
+        r.weapon=folder
     end
     r.bulletMuls,r.preAdds,r.preMuls={},{},{}
     if s then
