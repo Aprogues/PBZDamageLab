@@ -4,7 +4,7 @@ A UE4SS Lua mod: summon a training dummy, see every hit split into the damage po
 
 中文说明见 [README_zh.md](README_zh.md).
 
-![Damage Lab](preview.png)
+![Damage Lab panel, Chinese and English](panels.png)
 
 ## Download
 
@@ -47,8 +47,6 @@ Change them in `PBZDamageLab/config.ini` (restart the game after editing). Inser
 - **Accessories**: every equipped accessory with its damage pool; green while its bonus is active. Live values for Dance Fan, Twin Fish Pendant and Talisman of Despair.
 - **Build compare**, **timed test**, **CSV export**, **combat mode**.
 - Chinese / English panel, follows the game language.
-
-![Panels](panels.png)
 
 ## Damage formula (measured on the dummy)
 
